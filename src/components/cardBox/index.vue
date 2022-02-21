@@ -4,15 +4,17 @@
       <Icon v-if="icon" size="20" :icon="icon"></Icon>
       <span v-if="title">{{title}}</span>
     </div>
-    <slot></slot>
+    <div :class="`${prefixCls}-content`">
+      <slot></slot>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { defineProps } from 'vue'
-import { systemConfig } from '@/config/system.js'
 import Icon from '../iconSvg/icon.vue'
-const prefixCls = systemConfig.publicPrefixCls + '-card-box'
+import { usePrefixCls } from '@/hooks/useSetting'
+const prefixCls = usePrefixCls('card-box')
 defineProps({
   title: String,
   icon: String
@@ -22,7 +24,7 @@ defineProps({
 <style lang="scss" scoped>
   .shete-card-box {
     border-radius: 20px;
-    border: 1px solid #888;
+    border: none;
     background-color: $--color-bg;
     &-title {
       display: flex;
@@ -30,9 +32,13 @@ defineProps({
       justify-content: flex-start;
       align-items: center;
       padding: 10px 20px;
+      font-weight: bold;
       span {
         margin-left: 10px;
       }
+    }
+    &-content{
+      padding: 20px;
     }
   }
 </style>
