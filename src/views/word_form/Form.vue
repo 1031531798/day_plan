@@ -1,43 +1,45 @@
 <template>
   <CardBox title="2022-2-20  星期日" icon="icon-danci">
-    <div>这是一个表单</div>
-    <BasicForm id="wordForm">
+    <a-form
+      ref="formRef"
+      :model="wordFormData"
+    >
       <a-space
-        v-for="(user, index) in dynamicValidateForm.users"
-        :key="user.id"
+        v-for="(word, index) in wordFormData.words"
+        :key="word.id"
         style="display: flex; margin-bottom: 8px"
         align="baseline"
       >
         <a-form-item
-          :name="['users', index, 'first']"
+          :name="['words', index, 'enWord']"
           :rules="{
             required: true,
-            message: 'Missing first name',
+            message: '英文不能为空',
           }"
         >
-          <a-input v-model:value="user.first" placeholder="First Name" />
+          <a-input v-model:value="word.enWord" placeholder="英文" />
         </a-form-item>
         <a-form-item
-          :name="['users', index, 'last']"
+          :name="['words', index, 'cnWord']"
           :rules="{
             required: true,
-            message: 'Missing last name',
+            message: '中文翻译不能为空',
           }"
         >
-          <a-input v-model:value="user.last" placeholder="Last Name" />
+          <a-input v-model:value="word.cnWord" placeholder="中文" />
         </a-form-item>
-        <MinusCircleOutlined @click="removeUser(user)" />
+        <MinusCircleOutlined @click="removeUser(word)" />
       </a-space>
       <a-form-item>
         <a-button type="dashed" block @click="addUser">
           <PlusOutlined />
-          Add user
+          添加单词
         </a-button>
       </a-form-item>
-      <a-form-item>
-        <a-button type="primary" html-type="submit">Submit</a-button>
+      <a-form-item style="text-align: right">
+        <a-button type="primary" html-type="submit">完成今日计划</a-button>
       </a-form-item>
-    </BasicForm>
+    </a-form>
   </CardBox>
 </template>
 <script lang="ts" setup>
@@ -45,25 +47,25 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import CardBox from '@/components/cardBox/index.vue'
 import BasicForm from '@/components/Form/BasicForm.vue'
 import { ref, reactive } from 'vue'
-interface User {
-  first: string;
-  last: string;
+interface Word {
+  enWord: string;
+  cnWord: string;
   id: number;
 }
 const formRef = ref<any>('')
-const dynamicValidateForm = reactive<{ users: User[] }>({
-  users: []
+const wordFormData = reactive<{ words: Word[] }>({
+  words: []
 })
-const removeUser = (item: User) => {
-  const index = dynamicValidateForm.users.indexOf(item)
+const removeUser = (item: Word) => {
+  const index = wordFormData.words.indexOf(item)
   if (index !== -1) {
-    dynamicValidateForm.users.splice(index, 1)
+    wordFormData.words.splice(index, 1)
   }
 }
 const addUser = () => {
-  dynamicValidateForm.users.push({
-    first: '',
-    last: '',
+  wordFormData.words.push({
+    enWord: '',
+    cnWord: '',
     id: Date.now()
   })
 }
